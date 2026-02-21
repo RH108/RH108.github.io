@@ -1,0 +1,246 @@
+:root {
+    --primary: #000000;
+    --accent: #2563eb;
+    --bg: #ffffff;
+    --gold: #d4af37;
+    --platinum: #e5e4e2;
+    --silver: #bfc1c2;
+    --bronze: #CD7F32;
+}
+
+body {
+    font-family: 'Inter', 'Arial', sans-serif;
+    background-color: var(--bg);
+    color: var(--primary);
+    scroll-behavior: smooth;
+}
+
+.display-font { 
+    font-family: 'Inter', sans-serif; 
+    font-weight: 900; 
+    letter-spacing: -0.05em; 
+}
+
+.body-font { 
+    font-family: 'Outfit', sans-serif; 
+}
+
+/* Scroll Revel Animations */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Accordion Styles */
+.accordion-item.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-item.active .accordion-header h3 {
+    color: var(--accent);
+}
+
+.accordion-header {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    outline: none !important;
+}
+
+/* Card Designs */
+.glass-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: #000000;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
+}
+
+.text-pop {
+    background: linear-gradient(120deg, #2563eb 0%, #7c3aed 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Nav Hover Effects */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #000;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after { 
+    width: 100%; 
+}
+
+/* Experience Tags */
+.skill-tag {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Medal & Indicator Styles */
+.medal-container {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.medal {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.medal-gold { background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #fceabb 100%); border: 1px solid #d4af37; }
+.medal-platinum { background: linear-gradient(135deg, #e5e4e2 0%, #ffffff 50%, #e5e4e2 100%); border: 1px solid #94a3b8; }
+.medal-silver { background: linear-gradient(135deg, #bfc1c2 0%, #ffffff 50%, #bfc1c2 100%); border: 1px solid #a1a1aa; }
+.medal-bronze { background: linear-gradient(135deg, #CD7F32 0%, #f5af19 50%, #CD7F32 100%); border: 1px solid #8B4513; }
+
+.tag-text {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    background: #f1f5f9;
+    color: #64748b;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+    cursor: help;
+}
+
+/* Tooltip Implementation */
+.tag-text::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    z-index: 50;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.tag-text:hover::before {
+    opacity: 1;
+    visibility: visible;
+    bottom: 140%;
+}
+
+.big-dot {
+    height: 12px;
+    width: 12px;
+    background-color: #2563eb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Image & Logo Containers */
+.logo-container {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(1);
+    transition: filter 0.5s ease;
+}
+
+.glass-card:hover .logo-img {
+    filter: grayscale(0);
+}
+
+.placeholder-box {
+    width: 48px;
+    height: 48px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover .placeholder-box {
+    background: #000;
+    color: #fff;
+}
+
+/* Lightbox Specific Styles */
+#lightbox {
+    transition: all 0.3s ease-in-out;
+}
+
+#lightbox-desc {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Custom scrollbar for the description side */
+#lightbox .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+}
+
+#lightbox .overflow-y-auto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#lightbox .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+@keyframes zoom-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animate-in {
+    animation: zoom-in 0.3s ease-out forwards;
+}
