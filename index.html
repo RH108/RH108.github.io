@@ -91,7 +91,7 @@
                     <span class="text-sm font-bold uppercase tracking-[0.3em] text-slate-400">Aspiring Innovator</span>
                 </div>
                 <h1 class="text-6xl md:text-[10vw] display-font leading-[0.9] mb-10">
-                    IDEAS THAT <br><span class="text-pop">MATTER.</span>
+                   <span class="bg-black text-white">IDEAS THAT </span> <br><span class="text-pop">MATTER.</span>
                 </h1>
                 <div class="grid md:grid-cols-2 gap-10 items-end">
                     <p class="text-xl md:text-2xl body-font text-slate-500 leading-relaxed font-light">
@@ -570,63 +570,89 @@
                 </div>
             </div>
 
-            <!-- Aggregated School Table -->
-            <div class="mt-28 overflow-x-auto reveal">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr
-                            class="border-b-2 border-black text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                            <th class="py-4">Award Title & Recognition</th>
-                            <th class="py-4">Awarding Body</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm font-bold">
-                        <tr class="border-b border-slate-100">
-                            <td class="py-8">
-                                <div class="flex items-center gap-3">
-                                    <span>Leadership Award (Gold)</span>
-                                    <div class="medal-container">
-                                        <span class="medal medal-gold"></span>
-                                        <span class="medal medal-gold"></span>
-                                        <span class="medal medal-gold"></span>
-                                        <span style="color: #d4af37;" class="tag-text"
-                                            data-tooltip="3x Gold Medals">3X</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-8">KYS Melaka</td>
-                        </tr>
-                        <tr class="border-b border-slate-100">
-                            <td class="py-8">
-                                <div class="flex items-center gap-3">
-                                    <span>Cocurriculum Excellence Award</span>
-                                    <div class="medal-container">
-                                        <span class="medal medal-platinum"></span>
-                                        <span class="medal medal-gold"></span>
-                                        <span class="medal medal-gold"></span>
-                                        <span style="color: #2563eb;" class="tag-text italic"
-                                            data-tooltip="1x Platinum Medal">1X</span>
-                                        <span style="color: #d4af37;" class="tag-text italic"
-                                            data-tooltip="2x Gold Medals">2X</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-8">KYS Melaka</td>
-                        </tr>
-                        <tr class="border-b border-slate-100">
-                            <td class="py-3">
-                                <div class="flex items-center gap-">
-                                    <span>Best in Coding Award</span>
-                                    <div class="medal-container">
-                                        <span style="color: #64748b;" class="tag-text"
-                                            data-tooltip="3 Consecutive Years: 23-25">3X</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-8">KYS Melaka</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Awards Cards -->
+            <div class="mt-28 reveal">
+            <div class="mb-20 reveal">
+                <h2 class="text-4xl md:text-6xl display-font uppercase leading-[1.1]">Academic<br>Prowess.</h2>
+            </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Card 1 -->
+                    <div class="bg-white  overflow-hidden lg:border-r lg:border-slate-300 lg:pr-8">
+                        <!-- 3 Award Images -->
+                        <div class="grid grid-cols-3 gap-1 p-2">
+                            <img src="img/leadership award.svg" alt="Leadership Award 1"
+                                class="w-full h-40 object-contain">
+
+                            <img src="img/leadership award.svg" alt="Leadership Award 2"
+                                class="w-full h-40 object-contain">
+
+                            <img src="img/leadership award.svg" alt="Leadership Award 3"
+                                class="w-full h-40 object-contain">
+                        </div>
+
+                        <div class="p-3 pt-0">
+                            <h3 class="text-lg font-black mb-2">
+                                Leadership Award (Gold) ×3
+                            </h3>
+
+                            <p class="text-sm text-slate-600 mb-4">
+                                Awarded by KYS Melaka for outstanding leadership and service.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white  overflow-hidden lg:border-r lg:border-slate-300 lg:pr-8">
+                        <!-- 3 Award Images -->
+                        <div class="grid grid-cols-3 gap-1 p-2">
+                            <img src="img/cocurriculum award.svg" alt="Cocurriculum Award 1"
+                                class="w-full h-40 object-contain">
+
+                            <img src="img/plat_cocu_award.svg" alt="Cocurriculum Award 2"
+                                class="w-full h-40 object-contain">
+
+                            <img src="img/cocurriculum award.svg" alt="Cocurriculum Award 3"
+                                class="w-full h-40 object-contain">
+                        </div>
+
+                        <div class="p-3 pt-0">
+                            <h3 class="text-lg font-black mb-2">
+                                Cocurriculum Award (Gold, Platinum) ×3
+                            </h3>
+
+                            <p class="text-sm text-slate-600 mb-4">
+                                Recognition for exceptional performance in cocurricular activities.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white  overflow-hidden lg:pl-8">
+                        <!-- 3 Award Images -->
+                        <div class="grid grid-cols-3 gap-1 p-2">
+                            <img src="img/2023_coding_award.svg" alt="Coding Award 1"
+                                class="w-full h-40 object-contain">
+
+                            <img src="img/2024_coding_award.svg" alt="Coding Award 2"
+                                class="w-full h-40 object-contain">
+
+                            <img src="img/2025_coding_award.svg" alt="Coding Award 3"
+                                class="w-full h-40 object-contain">
+                        </div>
+
+                        <div class="p-3 pt-0">
+                            <h3 class="text-lg font-black mb-2">
+                                Best in Coding Award (Gold) ×3
+                            </h3>
+
+                            <p class="text-sm text-slate-600 mb-4">
+                                Awarded for excellence in programming and software development.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
