@@ -65,14 +65,130 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Outfit:wght@300;400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Supplemental styling: layered on top of style.css, new class names only so nothing in the
+         existing stylesheet is overridden. Merge into style.css whenever convenient. -->
+    <style>
+        :root {
+            --accent: #2563eb;
+        }
+
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: var(--accent);
+            z-index: 60;
+            transition: width 0.1s linear;
+        }
+
+        nav.scrolled {
+            padding-top: 0.9rem;
+            padding-bottom: 0.9rem;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0%;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.25s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.current::after {
+            width: 100%;
+        }
+
+        .nav-link.current {
+            color: var(--accent);
+        }
+
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        #mobile-menu.open {
+            max-height: 320px;
+        }
+
+        .reveal {
+            transition-delay: var(--d, 0ms);
+        }
+
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+
+        [onclick="openLightbox(this)"]:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--accent);
+            pointer-events: none;
+            z-index: 70;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+            opacity: 0;
+        }
+
+        .cursor-dot.live {
+            opacity: 1;
+        }
+
+        .cursor-dot.grow {
+            width: 34px;
+            height: 34px;
+            background: rgba(37, 99, 235, 0.15);
+            border: 1.5px solid var(--accent);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .reveal,
+            #mobile-menu,
+            .cursor-dot {
+                transition: none !important;
+            }
+        }
+
+        @media (hover: none) {
+            .cursor-dot {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body class="selection:bg-black selection:text-white">
 
+    <div id="scroll-progress"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
     <!-- Minimalist Nav -->
     <nav
-        class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 py-6 px-8 md:px-16 flex justify-between items-center">
-        <div class="text-4xl font-black tracking-tighter">RH<span class="text-blue-600">.</span></div>
+        class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 py-6 px-8 md:px-16 flex justify-between items-center transition-[padding] duration-300">
+        <a href="#" class="text-4xl font-black tracking-tighter">RH<span class="text-blue-600">.</span></a>
         <div class="hidden md:flex space-x-12 text-[13px] font-bold uppercase tracking-widest">
             <a href="#about" class="nav-link">Story</a>
             <a href="#experience" class="nav-link">Experience</a>
@@ -81,7 +197,19 @@
             <a href="#contact"
                 class="px-6 py-2 bg-black text-white rounded-full hover:bg-blue-600 transition-all">Contact</a>
         </div>
+        <button id="menu-toggle" class="md:hidden" aria-label="Toggle menu" aria-expanded="false">
+            <i data-lucide="menu" class="w-7 h-7"></i>
+        </button>
     </nav>
+    <div id="mobile-menu" class="fixed top-[76px] w-full z-40 bg-white border-b border-slate-100 md:hidden">
+        <div class="flex flex-col px-8 py-6 gap-5 text-sm font-bold uppercase tracking-widest">
+            <a href="#about" class="mobile-nav-link">Story</a>
+            <a href="#experience" class="mobile-nav-link">Experience</a>
+            <a href="#projects" class="mobile-nav-link">Work</a>
+            <a href="#awards" class="mobile-nav-link">Achievements</a>
+            <a href="#contact" class="mobile-nav-link text-blue-600">Contact</a>
+        </div>
+    </div>
 
     <!-- Impact Hero -->
     <section class="min-h-screen flex flex-col justify-center px-8 md:px-16 pt-20">
@@ -96,8 +224,8 @@
                 </h1>
                 <div class="grid md:grid-cols-2 gap-10 items-end">
                     <p class="text-xl md:text-2xl body-font text-slate-500 leading-relaxed font-light">
-                        I am Rayyan Harith. I explore and build <span class="text-black font-semibold">human-centric
-                            technology</span> designed to solve systemic challenges in community welfare.
+                        I'm Rayyan Harith — I build <span class="text-black font-semibold">human-centric
+                            technology</span> aimed at real, systemic gaps in community welfare.
                     </p>
                     <div class="flex gap-6">
                         <a href="#projects"
@@ -119,17 +247,39 @@
             </div>
             <div class="reveal body-font text-lg text-slate-600 leading-relaxed space-y-6">
                 <p>
-                    My journey as a programmer-turned-entrepreneur has been defined
-                    by a single question: How can we make professional-grade technology accessible to everyone?
+                    My path from programmer to entrepreneur has been driven by one question: how do we make
+                    professional-grade technology accessible to everyone?
                 </p>
                 <p>
-                    From representing Malaysia at international congresses to securing regional seed funding, my work is
-                    rooted in the rigorous research and development of projects fully supported by the <span
-                        class="text-black font-bold">Ministry of
-                        Education Malaysia</span>. I focus on creating 'invisible tech'—tools that work so seamlessly,
-                    you forget
-                    they're there.
+                    From representing Malaysia at international congresses to securing regional seed funding, my
+                    work is grounded in R&D fully supported by the <span class="text-black font-bold">Ministry of
+                        Education Malaysia</span> — building tools so seamless, you forget they're there.
                 </p>
+            </div>
+        </div>
+
+        <!-- By the numbers -->
+        <div class="max-w-6xl mx-auto mt-24 reveal">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-200 rounded-2xl overflow-hidden">
+                <div class="bg-slate-50 p-8 md:p-10">
+                    <div class="stat-number text-4xl md:text-5xl font-black tracking-tight" data-target="14">0</div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">Medals Won</p>
+                </div>
+                <div class="bg-slate-50 p-8 md:p-10">
+                    <div class="stat-number text-4xl md:text-5xl font-black tracking-tight" data-target="1000"
+                        data-prefix="$">0</div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">USD Seed Grant</p>
+                </div>
+                <div class="bg-slate-50 p-8 md:p-10">
+                    <div class="stat-number text-4xl md:text-5xl font-black tracking-tight" data-target="3">0</div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">National Publications
+                    </p>
+                </div>
+                <div class="bg-slate-50 p-8 md:p-10">
+                    <div class="stat-number text-4xl md:text-5xl font-black tracking-tight" data-target="2">0</div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">National Scout Honors
+                    </p>
+                </div>
             </div>
         </div>
     </section>
@@ -160,9 +310,8 @@
                             </div>
                         </div>
                         <p class="body-font text-slate-500 max-w-2xl mb-6">
-                            Oversaw the development, design, and operations of the company's strategy, innovation, and
-                            expansion. I represented the company in important meetings with organizations such as MIDA
-                            and InvestPenang to establish strategic alliances.
+                            Lead strategy, product direction, and operations for the company, representing it in
+                            meetings with bodies such as MIDA and InvestPenang to build strategic alliances.
                         </p>
 
                         <div class="flex flex-wrap gap-2 mb-8">
@@ -175,7 +324,8 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <!-- Image 1 -->
                             <div class="group relative aspect-video bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer"
-                                onclick="openLightbox(this)" data-title="Meeting with MIDA Penang"
+                                tabindex="0" onclick="openLightbox(this)" data-gallery="meetings" data-index="0"
+                                data-title="Meeting with MIDA Penang"
                                 data-desc="In this meeting with MIDA (Malaysian Investment Development Authority) Penang, we explored Penang’s strategic role in attracting foreign investors to Malaysia, with a strong focus on the rapidly evolving EV landscape and its integration potential.<br><br>Grateful for the valuable insights shared by:<br>- Mr. Muhammad Ghaddaffi Sardar Mohamed, Director – MIDA Penang">
                                 <img src="/img/midapenang_image.png" alt="MIDA Meeting"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -187,7 +337,8 @@
 
                             <!-- Image 2 -->
                             <div class="group relative aspect-video bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer"
-                                onclick="openLightbox(this)" data-title="Meeting with InvestPenang"
+                                tabindex="0" onclick="openLightbox(this)" data-gallery="meetings" data-index="1"
+                                data-title="Meeting with InvestPenang"
                                 data-desc="Discussed Malaysia's strategies to attract foreign investors and Penang's transformative role in growth.<br><br>Insights shared by:<br>- Mr. Lee Yoeu Chek, Vice President, Head – Manufacturing Development<br>- Mr. Muhammad Amirul Faiz Hussin, Executive – Manufacturing Development">
                                 <img src="/img/investpenang_image.png" alt="InvestPenang Meeting"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -199,7 +350,8 @@
 
                             <!-- Image 3 -->
                             <div class="group relative aspect-video bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer"
-                                onclick="openLightbox(this)" data-title="MIDA Foreign Investment Division"
+                                tabindex="0" onclick="openLightbox(this)" data-gallery="meetings" data-index="2"
+                                data-title="MIDA Foreign Investment Division"
                                 data-desc="Strategic discussion with the Foreign Investment Division of MIDA regarding matters about foreign investments and potential internation outreach with the UAE.<br><br>Insights shared by:<br>- Mdm. Siti Runiza Mohd. Zaini, Deputy Director – MIDA Foreign Investment Division<br>- Mr. Wan Ahmad Emir Faiz Hishamnuri, Administrative Officer – MIDA Foreign Investment Division">
                                 <img src="/img/midafid_image.png" alt="MIDA FID"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -238,9 +390,9 @@
                             </div>
 
                             <p class="body-font text-slate-500 max-w-2xl text-sm leading-relaxed mb-4">
-                                Promoted to lead the Terengganu Department. Overseeing Lua architecture, conducting code
-                                reviews, and providing technical mentorship. Effectively functioned as a Staff Engineer
-                                for cross-departmental technical strategy.
+                                Promoted to lead the Terengganu Department: owning Lua architecture, running code
+                                reviews, and mentoring engineers — functioning as a Staff Engineer for
+                                cross-departmental technical strategy.
                             </p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="skill-tag">Lua</span>
@@ -281,9 +433,8 @@
                         </div>
                         <p class="body-font text-slate-500 max-w-2xl mb-6">
                             Selected through the <u><a href="https://dev.mysver.se/sap-2024/">2024 Scripter
-                                    Apprenticeship Program</a></u>. Utilized Lua to develop UI
-                            elements and gameplay mechanics for Roblox-based environments, focusing on performance
-                            scaling and player engagement.
+                                    Apprenticeship Program</a></u>. Built UI and gameplay mechanics in Lua for
+                            Roblox-based environments, with a focus on performance scaling and player engagement.
                         </p>
                     </div>
                 </div>
@@ -343,7 +494,7 @@
                                 </div>
                             </div>
                             <p class="text-2xl md:text-3xl body-font font-light leading-tight mb-10">
-                                A comprehensive application made to connect people with the field of telemedicine.
+                                A comprehensive application connecting people with telemedicine.
                             </p>
                             <div class="space-y-4 text-slate-400 font-bold text-sm mb-12">
                                 <div class="flex items-center gap-4">
@@ -362,7 +513,8 @@
 
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="group relative aspect-[9/16] bg-slate-900 rounded-xl overflow-hidden border border-white/10 cursor-pointer"
-                                    onclick="openLightbox(this)" data-title="MediScan Feature"
+                                    tabindex="0" onclick="openLightbox(this)" data-gallery="sihatbot" data-index="0"
+                                    data-title="MediScan Feature"
                                     data-desc="Utilizes the user's camera to assess surface-level injury/disease for it to be crosschecked with the database using a custom and fact-checked dataset.">
                                     <img src="/img/mediscan_image.png" alt="Interface 1"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
@@ -373,7 +525,8 @@
                                 </div>
 
                                 <div class="group relative aspect-[9/16] bg-slate-900 rounded-xl overflow-hidden border border-white/10 cursor-pointer"
-                                    onclick="openLightbox(this)" data-title="Telemedicine Connectivity"
+                                    tabindex="0" onclick="openLightbox(this)" data-gallery="sihatbot" data-index="1"
+                                    data-title="Telemedicine Connectivity"
                                     data-desc="Hospitrack uses the user's location to locate the nearest clinic or hospital should the scan output as severe for the user to seek further professional assistance.">
                                     <img src="/img/hospitrack_image.png" alt="Interface 3"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
@@ -384,8 +537,9 @@
                                 </div>
 
                                 <div class="group relative aspect-[9/16] bg-slate-900 rounded-xl overflow-hidden border border-white/10 cursor-pointer"
-                                    onclick="openLightbox(this)" data-title="AI Symptom Triage"
-                                    data-desc="MediHelper, The core logic engine of SihatBot. This module guides users through a series of diagnostic questions to determine the severity of their condition using localized medical data.">
+                                    tabindex="0" onclick="openLightbox(this)" data-gallery="sihatbot" data-index="2"
+                                    data-title="AI Symptom Triage"
+                                    data-desc="MediHelper, the core logic engine of SihatBot. This module guides users through a series of diagnostic questions to determine the severity of their condition using localized medical data.">
                                     <img src="/img/medihelper_image.png" alt="Interface 2"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                                     <div
@@ -400,10 +554,9 @@
                     <div class="md:col-span-5 space-y-8">
                         <div class="p-8 border-l-4 border-black bg-white shadow-sm">
                             <h4 class="font-black text-xs uppercase tracking-widest mb-4">The Objective</h4>
-                            <p class="body-font text-slate-600">SihatBot is a human-centric healthcare application
-                                designed to bridge the gap between initial symptom onset and professional medical
-                                consultation. Developed with a focus on accessibility and rapid response, it serves as a
-                                digital first-responder tool for community welfare.</p>
+                            <p class="body-font text-slate-600">SihatBot bridges the gap between the first symptom
+                                and professional care. Built for accessibility and speed, it's a digital
+                                first-responder tool for community welfare.</p>
                         </div>
                         <div class="p-8 border-l-4 border-orange-600 bg-white shadow-sm">
                             <h4 class="font-black text-xs uppercase tracking-widest mb-4">Professional Consultation</h4>
@@ -441,8 +594,8 @@
                 <!-- Content -->
                 <h4 class="text-2xl display-font mb-4 uppercase tracking-tight">Media Features</h4>
                 <p class="text-base body-font text-slate-500 mb-8 leading-relaxed">
-                    Proudly featured across <strong>Sinar Bestari</strong>, <strong>Utusan Malaysia</strong>, and
-                    <strong>Kosmo Digital</strong> for achievements during the 14th SEAMEO SSYS Congress representing
+                    Featured across <strong>Sinar Bestari</strong>, <strong>Utusan Malaysia</strong>, and
+                    <strong>Kosmo Digital</strong> for achievements at the 14th SEAMEO SSYS Congress representing
                     Malaysia.
                 </p>
 
@@ -708,6 +861,15 @@
                 <i data-lucide="x" class="w-8 h-8"></i>
             </button>
 
+            <button onclick="stepLightbox(-1)" aria-label="Previous"
+                class="hidden lightbox-nav lightbox-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white/40 hover:text-white transition-colors">
+                <i data-lucide="chevron-left" class="w-9 h-9"></i>
+            </button>
+            <button onclick="stepLightbox(1)" aria-label="Next"
+                class="hidden lightbox-nav lightbox-next absolute right-16 top-1/2 -translate-y-1/2 z-10 text-white/40 hover:text-white transition-colors">
+                <i data-lucide="chevron-right" class="w-9 h-9"></i>
+            </button>
+
             <div class="w-full md:w-2/3 bg-black flex items-center justify-center">
                 <img id="lightbox-img" src="" class="max-w-full max-h-[80vh] object-contain">
             </div>
@@ -723,8 +885,181 @@
         </div>
     </div>
 
-    <!-- Custom Scripts -->
+    <!-- Original behavior lives in script.js; kept for anything not covered below. -->
     <script src="script.js"></script>
+
+    <!-- Enhancements: staggered reveal, nav state, stat count-up, richer lightbox, mobile menu, cursor.
+         Loads after script.js on purpose — openLightbox/closeLightbox are redefined here with the
+         gallery/keyboard additions, everything else uses its own names so nothing collides. -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            /* ---------- Staggered scroll reveal ---------- */
+            const revealEls = document.querySelectorAll('.reveal:not(.active)');
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    const siblings = Array.from(el.parentElement.children).filter(c => c.classList.contains('reveal'));
+                    const idx = siblings.indexOf(el);
+                    el.style.setProperty('--d', reduceMotion ? '0ms' : `${Math.min(idx, 4) * 90}ms`);
+                    el.classList.add('active');
+                    io.unobserve(el);
+                });
+            }, { threshold: 0.15 });
+            revealEls.forEach(el => io.observe(el));
+
+            /* ---------- Nav: scroll shrink, progress bar, active section ---------- */
+            const nav = document.querySelector('nav');
+            const progress = document.getElementById('scroll-progress');
+            const sections = ['about', 'experience', 'projects', 'awards', 'contact']
+                .map(id => document.getElementById(id)).filter(Boolean);
+            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+
+            const onScroll = () => {
+                nav.classList.toggle('scrolled', window.scrollY > 40);
+                const doc = document.documentElement;
+                const pct = (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100;
+                progress.style.width = `${Math.min(pct, 100)}%`;
+
+                let current = null;
+                sections.forEach(sec => {
+                    if (window.scrollY >= sec.offsetTop - 160) current = sec.id;
+                });
+                navLinks.forEach(link => {
+                    const match = current && link.getAttribute('href') === `#${current}`;
+                    link.classList.toggle('current', !!match);
+                });
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            /* ---------- Mobile menu ---------- */
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuToggle.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.toggle('open');
+                menuToggle.setAttribute('aria-expanded', String(isOpen));
+                menuToggle.innerHTML = isOpen ? '<i data-lucide="x" class="w-7 h-7"></i>' : '<i data-lucide="menu" class="w-7 h-7"></i>';
+                lucide.createIcons();
+            });
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.innerHTML = '<i data-lucide="menu" class="w-7 h-7"></i>';
+                    lucide.createIcons();
+                });
+            });
+
+            /* ---------- Stat count-up ---------- */
+            const statEls = document.querySelectorAll('.stat-number');
+            const statIO = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.target, 10);
+                    const prefix = el.dataset.prefix || '';
+                    if (reduceMotion) {
+                        el.textContent = prefix + target.toLocaleString();
+                    } else {
+                        const duration = 900;
+                        const start = performance.now();
+                        const tick = (now) => {
+                            const p = Math.min((now - start) / duration, 1);
+                            const eased = 1 - Math.pow(1 - p, 3);
+                            el.textContent = prefix + Math.round(eased * target).toLocaleString();
+                            if (p < 1) requestAnimationFrame(tick);
+                        };
+                        requestAnimationFrame(tick);
+                    }
+                    statIO.unobserve(el);
+                });
+            }, { threshold: 0.6 });
+            statEls.forEach(el => statIO.observe(el));
+
+            /* ---------- Custom cursor (fine pointer + hover-capable only) ---------- */
+            if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                const dot = document.getElementById('cursor-dot');
+                let x = 0, y = 0, cx = 0, cy = 0;
+                window.addEventListener('mousemove', (e) => {
+                    x = e.clientX; y = e.clientY;
+                    dot.classList.add('live');
+                });
+                const loop = () => {
+                    cx += (x - cx) * 0.2;
+                    cy += (y - cy) * 0.2;
+                    dot.style.left = `${cx}px`;
+                    dot.style.top = `${cy}px`;
+                    requestAnimationFrame(loop);
+                };
+                loop();
+                document.querySelectorAll('a, button, [onclick]').forEach(el => {
+                    el.addEventListener('mouseenter', () => dot.classList.add('grow'));
+                    el.addEventListener('mouseleave', () => dot.classList.remove('grow'));
+                });
+            }
+        });
+
+        /* ---------- Lightbox: gallery-aware with keyboard navigation ---------- */
+        let currentGalleryEls = [];
+        let currentGalleryIdx = 0;
+
+        function fillLightbox(el) {
+            document.getElementById('lightbox-title').textContent = el.dataset.title || '';
+            document.getElementById('lightbox-desc').innerHTML = el.dataset.desc || '';
+            const imgSrc = el.querySelector('img') ? el.querySelector('img').src : '';
+            document.getElementById('lightbox-img').src = imgSrc;
+        }
+
+        function openLightbox(el) {
+            const galleryName = el.dataset.gallery;
+            currentGalleryEls = galleryName
+                ? Array.from(document.querySelectorAll(`[data-gallery="${galleryName}"]`))
+                : [el];
+            currentGalleryIdx = Math.max(0, currentGalleryEls.indexOf(el));
+
+            fillLightbox(el);
+            document.getElementById('lightbox').classList.remove('hidden');
+            document.getElementById('lightbox').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            const showNav = currentGalleryEls.length > 1;
+            document.querySelectorAll('.lightbox-nav').forEach(btn => btn.classList.toggle('hidden', !showNav));
+            lucide.createIcons();
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.getElementById('lightbox').classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        function stepLightbox(dir) {
+            if (currentGalleryEls.length < 2) return;
+            currentGalleryIdx = (currentGalleryIdx + dir + currentGalleryEls.length) % currentGalleryEls.length;
+            fillLightbox(currentGalleryEls[currentGalleryIdx]);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('lightbox').classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') stepLightbox(-1);
+            if (e.key === 'ArrowRight') stepLightbox(1);
+        });
+
+        document.querySelectorAll('[onclick="openLightbox(this)"]').forEach(el => {
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox(el);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
